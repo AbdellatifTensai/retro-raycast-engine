@@ -3,7 +3,7 @@
 CFLAGS="-Wall -Wextra -pedantic"
 
 if [ $1 = "static" ]; then
-    LINKER_FLAGS="`pkg-config x11 --libs --static | sed -E 's/-l(\w*)/-l:lib\1.a/g'` -l:libm.a"
+    LINKER_FLAGS=" -l:libm.a `pkg-config x11 --libs --static | sed -E 's/-l(\w*)/-l:lib\1.a/g'`"
 
 elif [ $1 = "dynamic" ]; then
     LINKER_FLAGS="-lX11 -lm"
@@ -20,7 +20,7 @@ if [ $2 = "main" ]; then
 
 elif [ $2 = "debug" ]; then
     set -xe
-    gcc $CFLAGS -g main.c -o debug $LINKER_FLAGS
+    gcc $CFLAGS -DPROFILE -g main.c -o debug $LINKER_FLAGS
 
 else
     echo "USAGE: build.sh <static|dynamic> <main|debug>"
